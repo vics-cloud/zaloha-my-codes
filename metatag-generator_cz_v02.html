@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generátor Meta Tagů</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      pre {
+        background-color: #2d2d2d;
+        color: #f8f8f2;
+        padding: 15px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: "Fira Code", monospace;
+      }
+
+      pre span {
+        font-weight: bold;
+      }
+
+      .tag {
+        color: #66d9ef;
+      }
+
+      .attribute {
+        color: #a6e22e;
+      }
+
+      .value {
+        color: #e6db74;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-100 text-gray-800 font-sans">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold text-center mb-8">Generátor Meta Tagů</h1>
+
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sekce MOŽNOSTI -->
+        <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-2xl font-semibold mb-6">Možnosti</h2>
+          <label for="title" class="block font-medium">Název:</label>
+          <input
+            type="text"
+            id="title"
+            placeholder="Zadejte název stránky"
+            class="w-full mb-4 p-2 border border-gray-300 rounded"
+          />
+
+          <label for="description" class="block font-medium">Popis:</label>
+          <textarea
+            id="description"
+            placeholder="Zadejte popis stránky"
+            class="w-full mb-4 p-2 border border-gray-300 rounded"
+          ></textarea>
+
+          <label for="author" class="block font-medium">Autor:</label>
+          <input
+            type="text"
+            id="author"
+            placeholder="Zadejte jméno autora"
+            class="w-full mb-4 p-2 border border-gray-300 rounded"
+          />
+
+          <label for="copyright" class="block font-medium">Autorská práva:</label>
+          <input
+            type="text"
+            id="copyright"
+            placeholder="Zadejte informace o autorských právech"
+            class="w-full mb-4 p-2 border border-gray-300 rounded"
+          />
+
+          <label for="robots" class="block font-medium">Roboti:</label>
+          <input
+            type="text"
+            id="robots"
+            value="index, follow"
+            readonly
+            class="w-full mb-4 p-2 border border-gray-300 bg-gray-100 rounded"
+          />
+
+          <label for="viewport" class="block font-medium">
+            Povolit viewport:
+          </label>
+          <input type="checkbox" id="viewport" checked class="mb-4" />
+
+          <button
+            class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            onclick="generateMetaTags()"
+          >
+            Generovat Meta Tagy
+          </button>
+        </div>
+
+        <!-- Sekce KÓD -->
+        <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-2xl font-semibold mb-6">Kód</h2>
+          <pre id="generatedCode">
+<span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, initial-scale=1"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"robots"</span> <span class="attribute">content</span>=<span class="value">"index, follow"</span><span class="tag">&gt;</span>
+          </pre>
+          <button
+            class="w-full bg-green-500 text-white py-2 px-4 mt-4 rounded hover:bg-green-600"
+            onclick="copyCode()"
+          >
+            Kopírovat
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function generateMetaTags() {
+        const title = document.getElementById("title").value;
+        const description = document.getElementById("description").value;
+        const author = document.getElementById("author").value;
+        const copyright = document.getElementById("copyright").value;
+        const robots = document.getElementById("robots").value;
+        const viewport = document.getElementById("viewport").checked
+          ? "width=device-width, initial-scale=1"
+          : "";
+
+        let metaTags = `
+<span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"${viewport}"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"robots"</span> <span class="attribute">content</span>=<span class="value">"${robots}"</span><span class="tag">&gt;</span>
+`;
+
+        if (title)
+          metaTags += `<span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"title"</span> <span class="attribute">content</span>=<span class="value">"${title}"</span><span class="tag">&gt;</span>\n`;
+        if (description)
+          metaTags += `<span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"description"</span> <span class="attribute">content</span>=<span class="value">"${description}"</span><span class="tag">&gt;</span>\n`;
+        if (author)
+          metaTags += `<span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"author"</span> <span class="attribute">content</span>=<span class="value">"${author}"</span><span class="tag">&gt;</span>\n`;
+        if (copyright)
+          metaTags += `<span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="value">"copyright"</span> <span class="attribute">content</span>=<span class="value">"${copyright}"</span><span class="tag">&gt;</span>\n`;
+
+        document.getElementById("generatedCode").innerHTML = metaTags.trim();
+      }
+
+      function copyCode() {
+        const code = document.getElementById("generatedCode").textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          alert("Kód byl zkopírován do schránky!");
+        });
+      }
+    </script>
+  </body>
+</html>
